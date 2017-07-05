@@ -1,0 +1,34 @@
+@import 'base';
+
+// Bootstrap == == == == == == == == == ==
+@import "~bootswatch/flatly/variables";
+
+// WTF wrong default config overwrite
+$icon-font-name: "~/bootstrap-sass/assets/fonts/bootstrap";
+
+@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+@import "~bootswatch/flatly/bootswatch";
+
+// // // // End bootstrap // // // // // //
+
+
+
+
+// Some best-practice CSS that's useful for most apps
+// Just remove them if they're not what you want
+html {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
