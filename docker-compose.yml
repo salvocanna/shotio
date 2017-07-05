@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  chrome:
+    image: yukinying/chrome-headless-browser:latest
+    container_name: chrome
+#    volumes:
+#      - "chrome-data:/var/"
+    shm_size: 1g
+    cap_add:
+      - SYS_ADMIN
+    networks:
+      - back-tier
+#
+#volumes:
+#  db-data:
+
+networks:
+  front-tier:
+  back-tier:
