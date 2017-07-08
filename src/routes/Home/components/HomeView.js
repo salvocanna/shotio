@@ -1,6 +1,8 @@
 import React from 'react'
 import DuckImage from '../assets/Duck.jpg'
 import './HomeView.scss'
+import Socket from '../../../clientSocket'
+
 
 export const HomeView = () => (
   <div>

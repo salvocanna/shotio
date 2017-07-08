@@ -5,7 +5,7 @@ const logger = require('../build/lib/logger')
 const webpackConfig = require('../build/webpack.config')
 const project = require('../project.config')
 //const compress = require('compression')
-const serverSocket = require('./serverSocket');
+import serverSocket from './serverSocket'
 
 const app = express();
 //app.use(compress());
@@ -17,7 +17,6 @@ http.listen(3000, () => {
 })
 
 const socket = serverSocket(http);
-
 
 // ------------------------------------
 // Apply Webpack HMR Middleware
