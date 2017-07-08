@@ -1,8 +1,7 @@
 const socketIO = require('socket.io');
 const ChromeRemoteInterface = require('chrome-remote-interface');
 const logger = require('../build/lib/logger')
-
-
+import ChromeRemoteInterfaceClient from './chromeRemoteInterfaceClient'
 
 
 module.exports = function(http) {
@@ -15,38 +14,15 @@ module.exports = function(http) {
     socket.on('connection', (s) => {
         logger.info('I got a client on the server!!! XXXXXXXX');
 
+        s.emit('xx', 'LOL');
 
-        s.on('event', (obj) => {
-            console.log('event! yay');
-            if (obj === 'doTest') {
-                ChromeRemoteInterface((client) => {
-                    // extract domains
-                    const {Network, Page} = client;
-                    // setup handlers
-                    Network.requestWillBeSent((params) => {
-                        console.log(params.request.url);
-                    });
-                    Page.loadEventFired(() => {
-                        client.close();
-                    });
-                    // enable events then start!
-                    Promise.all([
-                        Network.enable(),
-                        Page.enable()
-                    ]).then(() => {
-                        return Page.navigate({url: 'https://github.com'});
-                    }).catch((err) => {
-                        console.error(err);
-                        client.close();
-                    });
-                }).on('error', (err) => {
-                    // cannot connect to the remote endpoint
-                    console.error(err);
-                });
-            }
+        s.on('screenshot', async (obj) => {
+            console.log('event screenshot! yay');
+            const screenshot = await ChromeRemoteInterfaceClient.captureScreenshot('https://www.firebox.com');
+            console.log('screen data', screenshot.length);
+
+            return;
         });
-
-        
 
     });
 

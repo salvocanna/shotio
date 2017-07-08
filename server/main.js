@@ -1,22 +1,23 @@
-const express = require('express')
-const path = require('path')
-const webpack = require('webpack')
-const logger = require('../build/lib/logger')
-const webpackConfig = require('../build/webpack.config')
-const project = require('../project.config')
-//const compress = require('compression')
+import express from 'express'
+import path from 'path'
+import webpack from 'webpack'
+import { createServer } from 'http'
+import logger from '../build/lib/logger'
+import webpackConfig from '../build/webpack.config'
+import project from '../project.config'
 import serverSocket from './serverSocket'
 
+//const compress = require('compression')
 const app = express();
 //app.use(compress());
 
-const http = require('http').createServer(app);
+const httpServer = createServer(app);
 
-http.listen(3000, () => {
+httpServer.listen(3000, () => {
     logger.success('Server is running at http://localhost:3000');
 })
 
-const socket = serverSocket(http);
+const socket = serverSocket(httpServer);
 
 // ------------------------------------
 // Apply Webpack HMR Middleware

@@ -13,6 +13,7 @@ export const Counter = ({ counter, increment, doubleAsync }) => (
     </button>
   </div>
 )
+
 Counter.propTypes = {
   counter: PropTypes.number.isRequired,
   increment: PropTypes.func.isRequired,

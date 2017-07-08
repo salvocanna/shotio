@@ -9,11 +9,9 @@ export default () => {
         console.info('connect! yay');
     });
 
-    s.on('event', (obj) => {
+    s.on('xx', (obj) => {
         console.info('event! yay', obj);
-        if (obj === 'doTest') {
-
-        }
+        s.emit('screenshot');
     });
 
     s.on('disconnect', () => {

@@ -7,10 +7,7 @@ import clientSocket from './clientSocket'
 // Store Initialization
 // ------------------------------------
 const store = createStore(window.__INITIAL_STATE__)
-
 const socket = clientSocket();
-
-console.log("made socket", socket);
 
 // Render Setup
 // ------------------------------------
