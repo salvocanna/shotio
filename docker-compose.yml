@@ -11,9 +11,27 @@ services:
       - SYS_ADMIN
     networks:
       - back-tier
+    expose:
+      - "9222:9222"
 #
-#volumes:
-#  db-data:
+#  redis:
+#    image: redis
+#    container_name: redis:letest
+##    volumes:
+##      - "chrome-data:/var/"
+#    networks:
+#      - back-tier
+#
+#  redis:
+#    image:  ch
+#    container_name: redis:letest
+##    volumes:
+##      - "chrome-data:/var/"
+#    networks:
+#      - back-tier
+##
+##volumes:
+##  db-data:
 
 networks:
   front-tier:

@@ -22,8 +22,10 @@
   "dependencies": {
     "bootstrap-sass": "^3.3.7",
     "bootswatch": "^3.3.7",
+    "chrome-remote-interface": "^0.24.0",
     "compression": "^1.6.2",
     "express": "^4.14.0",
+    "fsevents": "1.1.2",
     "object-assign": "^4.1.1",
     "promise": "^7.1.1",
     "prop-types": "^15.5.10",
@@ -34,6 +36,7 @@
     "redbox-react": "^1.3.6",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
+    "socket.io-client": "^2.0.3",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {

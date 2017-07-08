@@ -4,10 +4,20 @@ const webpack = require('webpack')
 const logger = require('../build/lib/logger')
 const webpackConfig = require('../build/webpack.config')
 const project = require('../project.config')
-const compress = require('compression')
+//const compress = require('compression')
+const serverSocket = require('./serverSocket');
 
-const app = express()
-app.use(compress())
+const app = express();
+//app.use(compress());
+
+const http = require('http').createServer(app);
+
+http.listen(3000, () => {
+    logger.success('Server is running at http://localhost:3000');
+})
+
+const socket = serverSocket(http);
+
 
 // ------------------------------------
 // Apply Webpack HMR Middleware
@@ -24,7 +34,8 @@ if (project.env === 'development') {
     noInfo      : false,
     lazy        : false,
     stats       : 'normal',
-  }))
+  }));
+
   app.use(require('webpack-hot-middleware')(compiler, {
     path: '/__webpack_hmr'
   }))
@@ -38,7 +49,7 @@ if (project.env === 'development') {
   // This rewrites all routes requests to the root /index.html file
   // (ignoring file requests). If you want to implement universal
   // rendering, you'll want to remove this middleware.
-  app.use('*', function (req, res, next) {
+  app.use('/', function (req, res, next) {
     const filename = path.join(compiler.outputPath, 'index.html')
     compiler.outputFileSystem.readFile(filename, (err, result) => {
       if (err) {
