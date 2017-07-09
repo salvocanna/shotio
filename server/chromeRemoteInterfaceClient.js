@@ -50,7 +50,6 @@ async function captureScreenshot(url) {
         return screenshotData;
     } catch (err) {
         console.error(err);
-        return null;
     }
 
     return null;
