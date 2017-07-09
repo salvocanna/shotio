@@ -12,14 +12,14 @@ module.exports = function(http) {
     });
 
     socket.on('connection', (s) => {
-        logger.info('I got a client on the server!!! XXXXXXXX');
+        logger.info('I got a client on the server!!!');
 
-        s.emit('xx', 'LOL');
+        //s.emit('xx', 'LOL');
 
         s.on('screenshot', async (obj) => {
             console.log('event screenshot! yay');
-            const screenshot = await ChromeRemoteInterfaceClient.captureScreenshot('https://www.firebox.com');
-            console.log('screen data', screenshot.length);
+           // const screenshot = await ChromeRemoteInterfaceClient.captureScreenshot('https://www.firebox.com');
+            //console.log('screen data', screenshot.length);
 
             return;
         });
