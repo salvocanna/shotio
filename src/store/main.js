@@ -2,6 +2,7 @@
 // Constants
 // ------------------------------------
 const MAKE_SCREENSHOT = 'MAKE_SCREENSHOT'
+const MAKE_SCREENSHOT_RESULT = 'MAKE_SCREENSHOT_RESULT'
 
 // ------------------------------------
 // Actions
@@ -20,25 +21,26 @@ export function makeScreenshot() {
 //}
 
 export const actions = {
-    MAKE_SCREENSHOT
+    MAKE_SCREENSHOT,
+    MAKE_SCREENSHOT_RESULT,
 }
 
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = {}
-export default async function mainReducer(state = initialState, action) {
-
-    // if (typeof action.socket === 'function') {
-    //     await action.socket(socket);
-    // }
-
+const initialState = {test: 123};
+export default function mainReducer(state = initialState, action) {
     switch (action.type) {
-        case MAKE_SCREENSHOT:
-            return Object.assign({}, state, {
-                screenshotData: null,
-            });
+        case actions.MAKE_SCREENSHOT_RESULT:
+            return {...state, screenshotData: action.data};
+            break;
+
+        //
+        // case MAKE_SCREENSHOT:
+        //     return Object.assign({}, state, {
+        //         screenshotData: null,
+        //     });
         default:
             return state;
     }

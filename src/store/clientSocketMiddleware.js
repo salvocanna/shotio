@@ -1,39 +1,39 @@
 import socket from '../clientSocket'
-import { actions, makeScreenshot } from './main'
+import { actions } from './main'
 
-const socketOnEvent = socket.onevent.bind(socket);
-socket.onevent = (packet) => {
-    onMessageMiddleware(packet);
-    socketOnEvent(packet);
-};
+export function bindStoreToSocket(store) {
+    const socketOnEvent = socket.onevent.bind(socket);
+    socket.onevent = (packet) => {
+        onMessageMiddleware(packet);
+        socketOnEvent(packet);
+    };
 
-const onMessageMiddleware = (packet) => {
-    const [eventName, params] = packet.data || [];
-    // Here I should despatch a new redux action based on
-    // what I'm receiving from the websocket
+    const onMessageMiddleware = (packet) => {
+        const [eventName, params] = packet.data || [];
+
+        // // Here I should despatch a new redux action based on
+        // // what I'm receiving from the websocket
+        store.dispatch({ type: eventName, ...params });
+    }
 }
 
-// socket.on('xx,', (obj) => {
-//     console.log('received,', obj)
-// });
-
-const socketMiddleware = (() => {
+const clientSocketMiddleware = (() => {
     return store => next => action => {
         console.log("socketMiddleware: ", action);
+
         switch (action.type) {
             //The user wants us to make screenshot!
             case actions.MAKE_SCREENSHOT:
                 socket.emit(actions.MAKE_SCREENSHOT, {url: 'https://salvocanna.io'});
-                return store;
                 break;
-            //This action is irrelevant to us, pass it on to the next middleware
+                // This action is irrelevant to us, pass it on to the next middleware
             default:
                 return next(action);
         }
     }
 })();
 
-export default socketMiddleware;
+export default clientSocketMiddleware;
 
 //
 //

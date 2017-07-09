@@ -1,5 +1,6 @@
 import socketIO from 'socket.io';
 import logger from '../build/lib/logger'
+import { actions } from '../src/store/main'
 //import ChromeRemoteInterfaceClient from './chromeRemoteInterfaceClient'
 
 module.exports = function(http) {
@@ -11,11 +12,11 @@ module.exports = function(http) {
 
     io.on('connection', (socket) => {
 
-        socket.on('MAKE_SCREENSHOT', (obj) => {
+        socket.on(actions.MAKE_SCREENSHOT, (obj) => {
             console.log('event screenshot! yay', obj);
            // const screenshot = await ChromeRemoteInterfaceClient.captureScreenshot('https://www.firebox.com');
             //console.log('screen data', screenshot.length);
-            socket.emit('test-message', {ab:'c', t: 123});
+            socket.emit(actions.MAKE_SCREENSHOT_RESULT, { data:'salvosalvosalvo' });
         });
 
     });

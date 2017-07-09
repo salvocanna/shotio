@@ -3,13 +3,13 @@ import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
-import socketMiddleware from './clientSocketMiddleware'
+import clientSocketMiddleware from './clientSocketMiddleware'
 
 const createStore = (initialState = {}) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
-  const middleware = [thunk, socketMiddleware]
+  const middleware = [thunk, clientSocketMiddleware]
 
   // ======================================================
   // Store Enhancers
