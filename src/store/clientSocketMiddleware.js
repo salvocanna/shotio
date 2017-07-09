@@ -8,23 +8,16 @@ socket.onevent = (packet) => {
 };
 
 const onMessageMiddleware = (packet) => {
-    const args = packet.args || [];
-    const eventName = args.slice(0, 1);
-    const params = args.slice(1);
-
-    console.log(onMessageMiddleware, eventName, params)
-
+    const [eventName, params] = packet.data || [];
+    // Here I should despatch a new redux action based on
+    // what I'm receiving from the websocket
 }
 
-// const onMessage = (socket, store) => {
-// }
-
-socket.on('xx,', (obj) => {
-    console.log('received,', obj)
-});
+// socket.on('xx,', (obj) => {
+//     console.log('received,', obj)
+// });
 
 const socketMiddleware = (() => {
-
     return store => next => action => {
         console.log("socketMiddleware: ", action);
         switch (action.type) {
