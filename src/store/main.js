@@ -1,10 +1,7 @@
-// import clientSocket from '../clientSocket'
-
-// const socket = clientSocket();
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const MAKE_SCREENSHOT = 'MAKE_SCREENSHOT'
+const MAKE_SCREENSHOT = 'MAKE_SCREENSHOT'
 
 // ------------------------------------
 // Actions
@@ -46,6 +43,3 @@ export default async function mainReducer(state = initialState, action) {
             return state;
     }
 }
-
-
-// socket.on('connect')
