@@ -1,7 +1,5 @@
-import clientSocket from '../clientSocket'
+import socket from '../clientSocket'
 import { actions, makeScreenshot } from './main'
-
-const socket = clientSocket();
 
 const socketOnEvent = socket.onevent.bind(socket);
 socket.onevent = (packet) => {
