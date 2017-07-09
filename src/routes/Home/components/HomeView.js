@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import DuckImage from '../assets/Duck.jpg'
 import './HomeView.scss'
-import { buttonClicked } from '../../../store/main'
+import { makeScreenshot } from '../../../store/main'
 //import Socket from '../../../clientSocket'
 
 class HomeView extends React.Component {
@@ -11,7 +11,7 @@ class HomeView extends React.Component {
         const { dispatch } = this.props;
         return <div>
             <h4 onClick={()=> {
-                dispatch(buttonClicked());
+                dispatch(makeScreenshot());
             }}>Welcome!</h4>
             <img alt='This is a duck, because Redux!' className='duck' src={DuckImage} />
         </div>;

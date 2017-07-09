@@ -2,12 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import createStore from './store/createStore'
 import './styles/main.scss'
-import clientSocket from './clientSocket'
+//import clientSocket from './clientSocket'
 
 // Store Initialization
 // ------------------------------------
 const store = createStore(window.__INITIAL_STATE__)
-const socket = clientSocket();
+//const socket = clientSocket();
 
 // Render Setup
 // ------------------------------------

@@ -1,15 +1,18 @@
+// import clientSocket from '../clientSocket'
+
+// const socket = clientSocket();
 // ------------------------------------
 // Constants
 // ------------------------------------
-export const BUTTON_CLICKED = 'BUTTON_CLICKED'
+export const MAKE_SCREENSHOT = 'MAKE_SCREENSHOT'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function buttonClicked() {
-  return {
-    type    : BUTTON_CLICKED
-  }
+export function makeScreenshot() {
+    return {
+        type: MAKE_SCREENSHOT
+    }
 }
 
 // // ------------------------------------
@@ -19,17 +22,30 @@ export function buttonClicked() {
 //   return (nextLocation) => dispatch(locationChange(nextLocation))
 //}
 
+export const actions = {
+    MAKE_SCREENSHOT
+}
+
+
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = {clicked: false}
-export default function mainReducer(state = initialState, action) {
+const initialState = {}
+export default async function mainReducer(state = initialState, action) {
+
+    // if (typeof action.socket === 'function') {
+    //     await action.socket(socket);
+    // }
+
     switch (action.type) {
-        case BUTTON_CLICKED:
+        case MAKE_SCREENSHOT:
             return Object.assign({}, state, {
-                clicked: !state.clicked
+                screenshotData: null,
             });
         default:
             return state;
     }
 }
+
+
+// socket.on('connect')
