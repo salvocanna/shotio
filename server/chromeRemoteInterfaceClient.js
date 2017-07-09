@@ -1,19 +1,19 @@
 import ChromeRemoteInterface from 'chrome-remote-interface';
 
-async function connect() {
-    // connect to endpoint
-    const client = await ChromeRemoteInterface();
-
-    // extract domains
-    const {Network, Page} = client;
-
-    // enable events then start!
-    await Page.enable();
-    await Network.enable();
-
-    return client;
-}
-
+// async function connect() {
+//     // connect to endpoint
+//     const client = await ChromeRemoteInterface();
+//
+//     // extract domains
+//     const {Network, Page} = client;
+//
+//     // enable events then start!
+//     await Page.enable();
+//     await Network.enable();
+//
+//     return client;
+// }
+//
 
 
 // const {data} = await Page.captureScreenshot();
@@ -24,32 +24,67 @@ async function connect() {
  * Will return base64 data of the image.
  *
  * @param url
+ * @param eventCallback
  * @returns {Promise.<*>}
  */
-async function captureScreenshot(url) {
-    try {
-        const client = await connect();
+async function loadPage(url, eventCallback) {
 
+    try {
+        eventCallback('Connecting');
+
+        const client = await ChromeRemoteInterface();
+
+        client.on('event', function (message) {
+            //if (message.method === 'Network.requestWillBeSent') {
+                console.log(message);
+            //}
+        });
+
+        // extract domains
         const {Network, Page} = client;
+
+        // enable events then start!
+        await Page.enable();
+        await Network.enable();
+
+        eventCallback('Connected');
+
+        Network.clearBrowserCache();
+        Network.clearBrowserCookies();
+        Network.setCacheDisabled(true);
 
         // setup handlers
         Network.requestWillBeSent(params => {
             console.log('sending ... ', params.request.url);
+            // try {
+            //     eventCallback('RequestWillBeSent', { params });
+            // } catch (e) {
+            //     console.error('RequestWillBeSent::e', e);
+            // }
+
         });
 
-        await Page.navigate({url: url});
-        // await Page.loadEventFired();
-        await Page.loadEventFired();
+        Network.responseReceived(params => {
+            eventCallback('NetworkResponseReceived', { params });
+        })
 
+        console.log('navigating ... ', url);
+        await Page.navigate({url: url});
+        await Page.loadEventFired();
+        // await Page.loadEventFired(() => {
+        //     eventCallback('PageLoad');
+        // });
+        console.log('navigated! ... ');
         const { data: screenshotData } = await Page.captureScreenshot();
 
         //const data = Buffer.from(screenshotData, 'base64');
 
         await client.close();
-
-        return screenshotData;
+        console.log('closed');
+        return 'NO_DATA';
     } catch (err) {
         console.error(err);
+        //eventCallback('error');
     }
 
     return null;
@@ -57,5 +92,5 @@ async function captureScreenshot(url) {
 
 
 export default {
-    captureScreenshot: (url) => captureScreenshot(url)
+    loadPage
 }

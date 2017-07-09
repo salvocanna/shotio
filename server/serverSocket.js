@@ -14,9 +14,10 @@ module.exports = function(http) {
 
         socket.on(actions.MAKE_SCREENSHOT, async obj => {
             console.log('event screenshot! yay', obj);
-            const screenshot = await ChromeRemoteInterfaceClient.captureScreenshot('https://www.firebox.com');
-            //console.log('screen data', screenshot.length);
-            socket.emit(actions.MAKE_SCREENSHOT_RESULT, { data: screenshot });
+            const begin = Date.now();
+            await ChromeRemoteInterfaceClient.loadPage('https://www.firebox.com', (eventType, data) => {
+                socket.emit(actions.MAKE_SCREENSHOT_RESULT, { eventType, time: Date.now() - begin, data });
+            });
         });
 
     });
