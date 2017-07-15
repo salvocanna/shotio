@@ -7,9 +7,10 @@ const MAKE_SCREENSHOT_RESULT = 'MAKE_SCREENSHOT_RESULT'
 // ------------------------------------
 // Actions
 // ------------------------------------
-export function makeScreenshot() {
+export function makeScreenshot(url) {
     return {
-        type: MAKE_SCREENSHOT
+        type: MAKE_SCREENSHOT,
+        url
     }
 }
 
@@ -29,11 +30,27 @@ export const actions = {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = {};
+const initialState = {benchmark: {}};
 export default function mainReducer(state = initialState, action) {
     switch (action.type) {
         case actions.MAKE_SCREENSHOT_RESULT:
-            return {...state, screenshotData: action.data};
+            const newState = Object.assign({}, state);
+            if (typeof newState.benchmark[action.id] === 'undefined') {
+                newState.benchmark[action.id] = {
+                    requestId: action.id, // useless
+                    events: [],
+                    screenshot: null
+                };
+            }
+
+            if (action.eventType === 'Event') {
+                newState.benchmark[action.id].events.push(action.data);
+            } else if (action.eventType === 'Screenshot') {
+                newState.benchmark[action.id].screenshot = action.data;
+            }
+
+            return newState;
+            //return {...state, screenshotData: action.data};
             break;
 
         //

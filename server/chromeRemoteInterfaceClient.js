@@ -19,7 +19,6 @@ import ChromeRemoteInterface from 'chrome-remote-interface'
 // const {data} = await Page.captureScreenshot();
 // fs.writeFileSync('scrot.png', Buffer.from(data, 'base64'));
 
-
 /**
  * Will return base64 data of the image.
  *
@@ -39,6 +38,7 @@ export async function loadPage(url, eventCallback) {
         client.on('event', function (message) {
             //if (message.method === 'Network.') {
                 console.log(message.method, message.params.timestamp);
+                eventCallback('Event', message);
             //}
         });
 
@@ -73,7 +73,12 @@ export async function loadPage(url, eventCallback) {
         //const data = Buffer.from(screenshotData, 'base64');
 
         await client.close();
-        console.log('closed');
+
+        console.log('Connection closed');
+
+        eventCallback('Screenshot', screenshotData);
+
+        // Should I even care about a return atm?
         return 'NO_DATA';
     } catch (err) {
         console.error(err);

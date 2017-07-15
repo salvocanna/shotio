@@ -1,6 +1,6 @@
 import socket from '../clientSocket'
 import { actions } from './main'
-
+import { v4 as UUID } from 'uuid'
 
 /**
  * These two functions are just a bridge that allows us to
@@ -33,7 +33,8 @@ const clientSocketMiddleware = (() => {
         switch (action.type) {
             //The user wants us to make screenshot!
             case actions.MAKE_SCREENSHOT:
-                socket.emit(actions.MAKE_SCREENSHOT, {url: 'https://salvocanna.io'});
+                socket.emit(actions.MAKE_SCREENSHOT, {url: action.url, id: UUID() });
+                //return next(redespatchedAction);
                 break;
                 // This action is irrelevant to us, pass it on to the next middleware
             default:

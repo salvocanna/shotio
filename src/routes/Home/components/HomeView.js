@@ -1,40 +1,46 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm } from 'redux-form';
+//import { Field, reduxForm } from 'redux-form';
 import { makeScreenshot } from '../../../store/main'
 import DuckImage from '../assets/Duck.jpg'
 import './HomeView.scss'
 
 class HomeView extends React.Component {
+    constructor(props) {
+        super(props);
+        this.go = this.go.bind(this);
+    }
+    go() {
+        const { dispatch } = this.props;
+        console.info("Going!", this.c.value);
+        dispatch(makeScreenshot(this.c.value));
+    }
     render() {
         const { dispatch } = this.props;
-        const { handleSubmit, pristine, reset, submitting } = this.props;
         return <div>
             <h4>Welcome!</h4>
-            <div className='btn' onClick={()=> {
-                dispatch(makeScreenshot());
-            }}>You want a new scrrenhot yah?</div>
-
-            <form onSubmit={handleSubmit}>
+            <div>
+                <label>Screenshot ya?</label>
                 <div>
-                    <label>First Name</label>
-                    <div>
-                        <Field
-                            name="firstName"
-                            component="input"
-                            type="text"
-                            placeholder="First Name"
-                        />
-                    </div>
+                    <input
+                        name="address"
+                        type="text"
+                        placeholder="url"
+                        value="https://www.firebox.com"
+                        ref={c => this.c = c}
+                    />
                 </div>
-                <button type="submit" disabled={pristine || submitting}>Submit</button>
-            </form>
+            </div>
+            <button type="submit" onClick={this.go}>Go on!</button>
+
             <img alt='This is a duck, because Redux!' className='duck' src={DuckImage} />
         </div>;
     }
 }
 
-export default connect(store => store)(reduxForm({
-    form: 'home',
-})(HomeView))
+// export default connect(store => store)(reduxForm({
+//     form: 'home',
+// })(HomeView))
+
+export default connect(store => store)(HomeView)
 

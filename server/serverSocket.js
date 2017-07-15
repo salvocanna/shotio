@@ -15,11 +15,10 @@ module.exports = function(http) {
         socket.on(actions.MAKE_SCREENSHOT, async obj => {
             console.log('event screenshot! yay', obj);
             const begin = Date.now();
-            await loadPage('https://www.firebox.com', (eventType, data) => {
-                socket.emit(actions.MAKE_SCREENSHOT_RESULT, { eventType, time: Date.now() - begin, data });
+            await loadPage(obj.url, (eventType, data) => {
+                socket.emit(actions.MAKE_SCREENSHOT_RESULT, { eventType, time: Date.now() - begin, data, id: obj.id });
             });
         });
-
     });
 
     return io;
