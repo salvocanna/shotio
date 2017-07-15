@@ -1,7 +1,7 @@
 import socketIO from 'socket.io';
 import logger from '../build/lib/logger'
 import { actions } from '../src/store/main'
-import ChromeRemoteInterfaceClient from './chromeRemoteInterfaceClient'
+import { loadPage } from './chromeRemoteInterfaceClient'
 
 module.exports = function(http) {
 
@@ -15,7 +15,7 @@ module.exports = function(http) {
         socket.on(actions.MAKE_SCREENSHOT, async obj => {
             console.log('event screenshot! yay', obj);
             const begin = Date.now();
-            await ChromeRemoteInterfaceClient.loadPage('https://www.firebox.com', (eventType, data) => {
+            await loadPage('https://www.firebox.com', (eventType, data) => {
                 socket.emit(actions.MAKE_SCREENSHOT_RESULT, { eventType, time: Date.now() - begin, data });
             });
         });

@@ -1,4 +1,4 @@
-import ChromeRemoteInterface from 'chrome-remote-interface';
+import ChromeRemoteInterface from 'chrome-remote-interface'
 
 // async function connect() {
 //     // connect to endpoint
@@ -27,25 +27,25 @@ import ChromeRemoteInterface from 'chrome-remote-interface';
  * @param eventCallback
  * @returns {Promise.<*>}
  */
-async function loadPage(url, eventCallback) {
+export async function loadPage(url, eventCallback) {
 
     try {
         eventCallback('Connecting');
 
-        const client = await ChromeRemoteInterface();
+        const client = await ChromeRemoteInterface({
+            host: 'chrome'
+        });
 
         client.on('event', function (message) {
-            //if (message.method === 'Network.requestWillBeSent') {
-                console.log(message);
+            //if (message.method === 'Network.') {
+                console.log(message.method, message.params.timestamp);
             //}
         });
 
-        // extract domains
         const {Network, Page} = client;
 
         // enable events then start!
-        await Page.enable();
-        await Network.enable();
+        await Promise.all([Network.enable(), Page.enable()]);
 
         eventCallback('Connected');
 
@@ -54,19 +54,12 @@ async function loadPage(url, eventCallback) {
         Network.setCacheDisabled(true);
 
         // setup handlers
-        Network.requestWillBeSent(params => {
-            console.log('sending ... ', params.request.url);
-            // try {
-            //     eventCallback('RequestWillBeSent', { params });
-            // } catch (e) {
-            //     console.error('RequestWillBeSent::e', e);
-            // }
+        // Network.requestWillBeSent(params => {
+        // });
 
-        });
-
-        Network.responseReceived(params => {
-            eventCallback('NetworkResponseReceived', { params });
-        })
+        // Network.responseReceived(params => {
+        //     eventCallback('NetworkResponseReceived', { params });
+        // })
 
         console.log('navigating ... ', url);
         await Page.navigate({url: url});
@@ -92,5 +85,4 @@ async function loadPage(url, eventCallback) {
 
 
 export default {
-    loadPage
 }
