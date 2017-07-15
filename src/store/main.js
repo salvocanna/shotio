@@ -29,7 +29,7 @@ export const actions = {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = {test: 123};
+const initialState = {};
 export default function mainReducer(state = initialState, action) {
     switch (action.type) {
         case actions.MAKE_SCREENSHOT_RESULT:
