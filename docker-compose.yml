@@ -3,7 +3,7 @@ version: "3"
 services:
   chrome:
     image: yukinying/chrome-headless-browser:latest
-#    container_name: chrome
+    container_name: chrome
 #    volumes:
 #      - "chrome-data:/var/"
     shm_size: 1g
@@ -15,10 +15,11 @@ services:
 #      - "9222:9222"
   node:
     build: ./docker/node/
+    container_name: node
     ports:
       - "3000:3000"
     volumes:
-      - ./:/usr/src/app
+      - ./:/usr/src/app:cached
     networks:
       - back-tier
     command: bash -c "yarn && npm rebuild node-sass && npm start"
