@@ -26,14 +26,10 @@ export const PageLayout = ({ children }) => (
                             <Link to='/counter' activeClassName='page-layout__nav-item--active'>Counter</Link>
                         </li>
                     </ul>
-                    {/*<ul className="nav navbar-nav navbar-right">*/}
-                        {/*<li><a href="#" target="_self">Link</a></li>*/}
-                    {/*</ul>*/}
                 </div>
             </div>
         </nav>
         <div className='container text-center'>
-            <h1>React Redux Starter Kit</h1>
             <div className='page-layout__viewport'>
                 {children}
             </div>

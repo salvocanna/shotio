@@ -30,24 +30,21 @@ class HomeView extends React.Component {
         const src = main.screenshot !== null ? 'data:image/png;base64,'+main.screenshot : null;
 
         return <div>
-            <h4>Welcome!</h4>
+            <h2>Take a screenshot!</h2>
             <div>
-                <label>Screenshot ya?</label>
-                <div>
-                    <input
-                        name="address"
-                        type="text"
-                        className="form-control"
-                        placeholder="www.example.com"
-                        value={this.state.address}
-                        onChange={this.onAddressChange}
-                    />
-                </div>
+                <input
+                    name="address"
+                    type="text"
+                    className="form-control"
+                    placeholder="www.example.com"
+                    value={this.state.address}
+                    onChange={this.onAddressChange}
+                />
             </div>
             <div>
                 <button type="submit"
                         onClick={this.go}
-                        className="btn btn-primary">
+                        className="btn btn-primary margin-button">
                     Go on!
                 </button>
             </div>
