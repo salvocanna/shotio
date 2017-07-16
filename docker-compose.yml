@@ -11,8 +11,9 @@ services:
       - SYS_ADMIN
     networks:
       - back-tier
-#    ports:
-#      - "9222:9222"
+    # try to hide the scrollbars pushing this flag in the entrypoint command
+    command: --no-scrollbars
+    # still not sure about --no-sandbox
   node:
     build: ./docker/node/
     container_name: node
@@ -47,5 +48,4 @@ services:
 ##  db-data:
 
 networks:
-#  front-tier:
   back-tier:
