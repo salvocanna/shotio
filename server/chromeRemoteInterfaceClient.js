@@ -72,9 +72,11 @@ export async function loadPage({url, width = 1440, height = 900, fullPage = true
                 selector: 'body',
                 nodeId: documentNodeId,
             });
-            const {model: {height}} = await DOM.getBoxModel({nodeId: bodyNodeId});
+            const {model: {height: fullHeight}} = await DOM.getBoxModel({nodeId: bodyNodeId});
 
-            await Emulation.setVisibleSize({width: width, height: height});
+            console.info("got height", fullHeight);
+
+            await Emulation.setVisibleSize({width: width, height: fullHeight});
             // This forceViewport call ensures that content outside the viewport is
             // rendered, otherwise it shows up as grey. Possibly a bug?
             await Emulation.forceViewport({x: 0, y: 0, scale: 1});
