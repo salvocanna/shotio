@@ -37,14 +37,19 @@ class HomeView extends React.Component {
                     <input
                         name="address"
                         type="text"
-                        placeholder="url"
+                        className="form-control"
+                        placeholder="www.example.com"
                         value={this.state.address}
                         onChange={this.onAddressChange}
                     />
                 </div>
             </div>
             <div>
-                <button type="submit" onClick={this.go}>Go on!</button>
+                <button type="submit"
+                        onClick={this.go}
+                        className="btn btn-primary">
+                    Go on!
+                </button>
             </div>
 
             <div>

@@ -6,3 +6,8 @@
   font-weight: bold;
   text-decoration: underline;
 }
+
+//Needed as navbar comes with default spacing under
+.navbar {
+  margin-bottom: 0;
+}
