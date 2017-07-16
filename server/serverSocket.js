@@ -12,11 +12,14 @@ module.exports = function(http) {
 
     io.on('connection', (socket) => {
 
-        socket.on(actions.MAKE_SCREENSHOT, async obj => {
-            console.log('event screenshot! yay', obj);
+        socket.on(actions.MAKE_SCREENSHOT, async request => {
+            console.log('event screenshot! yay', request);
             const begin = Date.now();
-            await loadPage(obj.url, (eventType, data) => {
-                socket.emit(actions.MAKE_SCREENSHOT_RESULT, { eventType, time: Date.now() - begin, data, id: obj.id });
+            await loadPage({
+                url: request.url,
+                eventCallback: (eventType, data) => {
+                    socket.emit(actions.MAKE_SCREENSHOT_RESULT, { eventType, time: Date.now() - begin, data, id: request.id });
+                },
             });
         });
     });

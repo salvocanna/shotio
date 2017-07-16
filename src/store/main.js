@@ -30,34 +30,23 @@ export const actions = {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = {benchmark: {}};
+const initialState = {
+    events: [],
+    screenshot: null,
+};
+
 export default function mainReducer(state = initialState, action) {
     switch (action.type) {
         case actions.MAKE_SCREENSHOT_RESULT:
-            const newState = Object.assign({}, state);
-            if (typeof newState.benchmark[action.id] === 'undefined') {
-                newState.benchmark[action.id] = {
-                    requestId: action.id, // useless
-                    events: [],
-                    screenshot: null
-                };
-            }
+            const newState = {...state};
 
             if (action.eventType === 'Event') {
-                newState.benchmark[action.id].events.push(action.data);
+                newState.events.push(action.data);
             } else if (action.eventType === 'Screenshot') {
-                newState.benchmark[action.id].screenshot = action.data;
+                newState.screenshot = action.data;
             }
 
             return newState;
-            //return {...state, screenshotData: action.data};
-            break;
-
-        //
-        // case MAKE_SCREENSHOT:
-        //     return Object.assign({}, state, {
-        //         screenshotData: null,
-        //     });
         default:
             return state;
     }

@@ -2,21 +2,33 @@ import React from 'react'
 import { connect } from 'react-redux'
 //import { Field, reduxForm } from 'redux-form';
 import { makeScreenshot } from '../../../store/main'
-import DuckImage from '../assets/Duck.jpg'
+// import DuckImage from '../assets/Duck.jpg'
 import './HomeView.scss'
 
 class HomeView extends React.Component {
     constructor(props) {
         super(props);
         this.go = this.go.bind(this);
+        this.onAddressChange = this.onAddressChange.bind(this);
+
+        this.state = {
+            address: 'https://www.firebox.com',
+        }
     }
+
     go() {
         const { dispatch } = this.props;
-        console.info("Going!", this.c.value);
-        dispatch(makeScreenshot(this.c.value));
+        dispatch(makeScreenshot(this.state.address));
     }
+
+    onAddressChange(e) {
+        this.setState({ address: e.target.value });
+    }
+
     render() {
-        const { dispatch } = this.props;
+        const { dispatch, main} = this.props;
+        const src = main.screenshot !== null ? 'data:image/png;base64,'+main.screenshot : null;
+
         return <div>
             <h4>Welcome!</h4>
             <div>
@@ -26,14 +38,20 @@ class HomeView extends React.Component {
                         name="address"
                         type="text"
                         placeholder="url"
-                        value="https://www.firebox.com"
-                        ref={c => this.c = c}
+                        value={this.state.address}
+                        onChange={this.onAddressChange}
                     />
                 </div>
             </div>
-            <button type="submit" onClick={this.go}>Go on!</button>
+            <div>
+                <button type="submit" onClick={this.go}>Go on!</button>
+            </div>
 
-            <img alt='This is a duck, because Redux!' className='duck' src={DuckImage} />
+            <div>
+                <img src={src} style={{width: '500px'}} ref={img => this.img = img} />
+            </div>
+
+            {/*<img alt='This is a duck, because Redux!' className='duck' src={DuckImage} />*/}
         </div>;
     }
 }

@@ -1,32 +1,18 @@
 import ChromeRemoteInterface from 'chrome-remote-interface'
 
-// async function connect() {
-//     // connect to endpoint
-//     const client = await ChromeRemoteInterface();
-//
-//     // extract domains
-//     const {Network, Page} = client;
-//
-//     // enable events then start!
-//     await Page.enable();
-//     await Network.enable();
-//
-//     return client;
-// }
-//
-
-
-// const {data} = await Page.captureScreenshot();
-// fs.writeFileSync('scrot.png', Buffer.from(data, 'base64'));
-
 /**
  * Will return base64 data of the image.
  *
- * @param url
- * @param eventCallback
+ * @param url string
+ * @param width int
+ * @param height int
+ * @param fullPage bool
+ * @param userAgent string
+ * @param eventCallback func
+ *
  * @returns {Promise.<*>}
  */
-export async function loadPage(url, eventCallback) {
+export async function loadPage({url, width = 1440, height = 900, fullPage = true, userAgent = null, eventCallback = () => true}) {
 
     try {
         eventCallback('Connecting');
@@ -38,40 +24,67 @@ export async function loadPage(url, eventCallback) {
         client.on('event', function (message) {
             //if (message.method === 'Network.') {
                 console.log(message.method, message.params.timestamp);
-                eventCallback('Event', message);
-            //}
+                //eventCallback('Event', message);
         });
 
-        const {Network, Page} = client;
+        const {Network, Page, DOM, Emulation} = client;
 
-        // enable events then start!
-        await Promise.all([Network.enable(), Page.enable()]);
+        // Set up viewport resolution, etc.
+        const deviceMetrics = {
+            width,
+            height,
+            deviceScaleFactor: 0,
+            mobile: false,
+            fitWindow: false,
+        };
+
+        await Emulation.setDeviceMetricsOverride(deviceMetrics);
+        await Emulation.setVisibleSize({
+            width: width,
+            height: height,
+        });
+
+        // Do all of them and get back asap
+        await Promise.all([
+            Network.enable(),
+            Page.enable(),
+            DOM.enable(),
+            userAgent ? Network.setUserAgentOverride({ userAgent }) : null
+        ]);
 
         eventCallback('Connected');
 
-        Network.clearBrowserCache();
-        Network.clearBrowserCookies();
+        //Network.clearBrowserCache();
+        //Network.clearBrowserCookies();
         Network.setCacheDisabled(true);
 
-        // setup handlers
-        // Network.requestWillBeSent(params => {
-        // });
-
-        // Network.responseReceived(params => {
-        //     eventCallback('NetworkResponseReceived', { params });
-        // })
-
-        console.log('navigating ... ', url);
+        //console.log('navigating ... ', url);
         await Page.navigate({url: url});
         await Page.loadEventFired();
-        // await Page.loadEventFired(() => {
-        //     eventCallback('PageLoad');
-        // });
-        console.log('navigated! ... ');
-        const { data: screenshotData } = await Page.captureScreenshot();
+
+        console.log('Navigated! ... ');
+
+        // If the `full` CLI option was passed, we need to measure the height of
+        // the rendered page and use Emulation.setVisibleSize
+        if (fullPage) {
+            const {root: {nodeId: documentNodeId}} = await DOM.getDocument();
+            const {nodeId: bodyNodeId} = await DOM.querySelector({
+                selector: 'body',
+                nodeId: documentNodeId,
+            });
+            const {model: {height}} = await DOM.getBoxModel({nodeId: bodyNodeId});
+
+            await Emulation.setVisibleSize({width: width, height: height});
+            // This forceViewport call ensures that content outside the viewport is
+            // rendered, otherwise it shows up as grey. Possibly a bug?
+            await Emulation.forceViewport({x: 0, y: 0, scale: 1});
+        }
+
+        const { data: screenshotData } = await Page.captureScreenshot({
+            format: 'png'
+        });
 
         //const data = Buffer.from(screenshotData, 'base64');
-
         await client.close();
 
         console.log('Connection closed');
@@ -83,6 +96,12 @@ export async function loadPage(url, eventCallback) {
     } catch (err) {
         console.error(err);
         //eventCallback('error');
+    } finally {
+        if (typeof client !== 'undefined' && typeof client.close === 'function') {
+            await client.close();
+        }
+
+        return null;
     }
 
     return null;
