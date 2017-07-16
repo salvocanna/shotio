@@ -1,19 +1,35 @@
 # Shotio
-##### Opinionated screenshot scheduler and performance visualiser
+##### Opinionated screenshot tool 'n' scheduler 'n' performance visualiser
 
 Docker headless chrome screenshots and page speed insights
 
-Ideally this will be made up of chrome headless for screenshots,
-storage them on s3 (or maybe just plain fs), react-redux on frontend
-(yslow to get insights about the page maybe?), node on backend as schedule
-... and if I wanna really think big maybe grafana and influxdb? (wow that's a lot)
+Ideally if this project will ever see the light, it will be made up of:
+- Node backend
+- React & Redux
+- Websocket to be blazing fast
+- As much ES6 as possible
+- Chrome headless for screenshots and network stats
+- YSlow for detailed insights
+- Long term storage (perhaps S3 or filesystem)
+- Docker to glue everything together
+- JSON API endpoints for setting / getting / running tasks & stats 
 
 
-Frontend bootstrap is coming from https://github.com/davezuko/react-redux-starter-kit
+As now, it's a mix of:
+- https://github.com/davezuko/react-redux-starter-kit
+- https://github.com/schnerd/chrome-headless-screenshots
+- https://github.com/cyrus-and/chrome-remote-interface
+- https://github.com/yukinying/chrome-headless-browser-docker
+- https://github.com/socketio/socket.io
 
+#### How to run it
 
-Dev
+`docker-compose up`
 
+Done. Easy. Launch `http://localhost:3000/`
 
-docker run --rm --name redis -d redis
-docker run --init -it --rm --name chrome --shm-size=1024m -p=127.0.0.1:9222:9222 --name chrome --cap-add=SYS_ADMIN yukinying/chrome-headless-browser
+#### How to stop it
+
+Ctrl + C, or:
+
+`docker-compose down`
