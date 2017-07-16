@@ -2,7 +2,7 @@ version: "3"
 
 services:
   chrome:
-    image: yukinying/chrome-headless-browser:latest
+    image: yukinying/chrome-headless-browser:61.0.3153.4
     container_name: chrome
 #    volumes:
 #      - "chrome-data:/var/"
@@ -12,7 +12,7 @@ services:
     networks:
       - back-tier
     # try to hide the scrollbars pushing this flag in the entrypoint command
-    command: --no-scrollbars
+    command: --hide-scrollbars
     # still not sure about --no-sandbox
   node:
     build: ./docker/node/
