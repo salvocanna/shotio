@@ -1,4 +1,5 @@
 import ChromeRemoteInterface from 'chrome-remote-interface'
+import sharp from 'sharp'
 
 /**
  * Will return base64 data of the image.
@@ -91,7 +92,15 @@ export async function loadPage({url, width = 1440, height = 900, fullPage = true
 
         console.log('Connection closed');
 
-        eventCallback('Screenshot', screenshotData);
+        sharp(Buffer.from(screenshotData, 'base64'))
+            .resize(1000)
+            .jpeg()
+            .toBuffer({
+                quality: 94,
+                progressive: true
+            })
+            .then(data => eventCallback('Screenshot', new Buffer(data).toString('base64')))
+            .catch(err => eventCallback('Screenshot', ''));
 
         // Should I even care about a return atm?
         return 'NO_DATA';
