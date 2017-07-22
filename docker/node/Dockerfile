@@ -1,4 +1,4 @@
-FROM node:8.1.4
+FROM node:8.2.1
 MAINTAINER yo@salvocanna.io
 
 # RUN apt-get update && 
