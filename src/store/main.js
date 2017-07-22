@@ -42,7 +42,7 @@ export default function mainReducer(state = initialState, action) {
 
             if (action.eventType === 'Event') {
                 newState.events.push(action.data);
-            } else if (action.eventType === 'Screenshot') {
+            } else if (action.eventType === 'Screenshot' && action.data && action.data.success) {
                 newState.screenshot = action.data;
             }
 

@@ -59,7 +59,6 @@ export async function loadPage({url, width = 1440, height = 900, fullPage = true
         //Network.clearBrowserCookies();
         Network.setCacheDisabled(true);
 
-        //console.log('navigating ... ', url);
         await Page.navigate({url: url});
         await Page.loadEventFired();
 
@@ -87,7 +86,6 @@ export async function loadPage({url, width = 1440, height = 900, fullPage = true
             format: 'png'
         });
 
-        //const data = Buffer.from(screenshotData, 'base64');
         await client.close();
 
         console.log('Connection closed');
@@ -99,8 +97,12 @@ export async function loadPage({url, width = 1440, height = 900, fullPage = true
                 quality: 94,
                 progressive: true
             })
-            .then(data => eventCallback('Screenshot', new Buffer(data).toString('base64')))
-            .catch(err => eventCallback('Screenshot', ''));
+            .then(data => eventCallback('Screenshot', {
+                success: true,
+                format: 'jpeg',
+                data: new Buffer(data).toString('base64')
+            }))
+            .catch(err => eventCallback('Screenshot', { success: false /*, message: err */ }));
 
         // Should I even care about a return atm?
         return 'NO_DATA';

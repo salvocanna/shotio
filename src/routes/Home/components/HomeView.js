@@ -27,7 +27,7 @@ class HomeView extends React.Component {
 
     render() {
         const { dispatch, main} = this.props;
-        const src = main.screenshot !== null ? 'data:image/png;base64,'+main.screenshot : null;
+        const src = main.screenshot !== null && main.screenshot.success ? `data:image/${main.screenshot.format};base64,${main.screenshot.data}` : null;
 
         return <div>
             <h2>Take a screenshot!</h2>
