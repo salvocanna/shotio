@@ -23,7 +23,7 @@ services:
       - ./:/usr/src/app:cached
     networks:
       - back-tier
-    command: bash -c "yarn && npm rebuild node-sass && npm start"
+    command: bash -c "yarn && npm rebuild node-sass && npm rebuild sharp && npm start"
 #    links:
 #    - php
 #    - node
