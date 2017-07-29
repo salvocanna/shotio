@@ -2,22 +2,63 @@ import express from 'express'
 import path from 'path'
 import webpack from 'webpack'
 import { createServer } from 'http'
+// import { apolloExpress, graphiqlExpress } from 'apollo-server-express';
+// import { makeExecutableSchema } from 'graphql-tools';
+// import bodyParser from 'body-parser';
 import logger from '../build/lib/logger'
 import webpackConfig from '../build/webpack.config'
 import project from '../project.config'
 import serverSocket from './serverSocket'
+import graphqlHTTP from 'express-graphql'
+import { buildSchema } from 'graphql';
 
-//const compress = require('compression')
+// import { server, database } from './config';
+// import typeDefs from './typeDefs';
+// import resolvers from './resolvers';
+// import { getTokenFromRequest } from './utils/auth';
+// mongoose.Promise = global.Promise;
+// mongoose.connect(`mongodb://${database.host}:${database.port}/${database.name}`);
+// const db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'Connection error:'));
+// db.once('open', () => console.log('We are connected!'));
+
 const app = express();
-//app.use(compress());
+// const schema = makeExecutableSchema({ typeDefs, resolvers });
+//var corsOptions = { origin: 'http://localhost:3000' };
+
+//app.use(cors(corsOptions));
+
+// app.use('/graphql', bodyParser.json(), apolloExpress(request => ({
+//     schema,
+//     context: { /* token: getTokenFromRequest(request)*/ }
+// })));
+// app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
+const schema = buildSchema(`
+  type Query {
+    hello: String
+  }
+`);
+
+// The root provides a resolver function for each API endpoint
+const root = {
+    hello: () => {
+        return 'Hello world!';
+    },
+};
+
+app.use('/graphql', graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+}));
 
 const httpServer = createServer(app);
 
 httpServer.listen(3000, () => {
     logger.success('Server is running at http://localhost:3000');
-})
+});
 
-const socket = serverSocket(httpServer);
+// const socket = serverSocket(httpServer);
 
 // ------------------------------------
 // Apply Webpack HMR Middleware

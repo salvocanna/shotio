@@ -3,7 +3,7 @@ import thunk from 'redux-thunk'
 import { browserHistory } from 'react-router'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
-import clientSocketMiddleware from './clientSocketMiddleware'
+// import clientSocketMiddleware from './clientSocketMiddleware'
 import ApolloClient from '../ApolloClient'
 
 const createStore = (initialState = {}) => {

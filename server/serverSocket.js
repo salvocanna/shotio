@@ -1,9 +1,9 @@
 import socketIO from 'socket.io';
-import logger from '../build/lib/logger'
-import { actions } from '../src/store/main'
-import { loadPage } from './chromeRemoteInterfaceClient'
+import logger from '../build/lib/logger';
+import { actions } from '../src/store/main';
+import { loadPage } from './chromeRemoteInterfaceClient';
 
-module.exports = function(http) {
+export default (http) => {
 
     let io = socketIO(http, {
         pingInterval: 5000,

@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import createStore from './store/createStore'
 import './styles/main.scss'
-import { bindStoreToSocket } from './store/clientSocketMiddleware'
+// import { bindStoreToSocket } from './store/clientSocketMiddleware'
 
 // Store Initialization
 // ------------------------------------
@@ -10,7 +10,7 @@ const store = createStore(window.__INITIAL_STATE__)
 
 // This will allow us to catch messages from websocket and re-despatch them
 // to a reducer
-bindStoreToSocket(store);
+// bindStoreToSocket(store);
 
 // Render Setup
 // ------------------------------------
