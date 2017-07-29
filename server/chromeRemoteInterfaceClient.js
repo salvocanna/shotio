@@ -1,5 +1,17 @@
 import ChromeRemoteInterface from 'chrome-remote-interface'
 import sharp from 'sharp'
+import fs from 'fs'
+
+// This will be updated ...
+import lighhouse from '../src/libs/lighthouse-index'
+
+// Shhh! We will remove this param from here in another refactoring!
+const HOSTNAME = 'chrome';
+
+const sleep = n => new Promise(resolve => setTimeout(resolve, n));
+
+let globalClient = null;
+
 
 /**
  * Will return base64 data of the image.
@@ -15,12 +27,12 @@ import sharp from 'sharp'
  */
 export async function loadPage({url, width = 1440, height = 900, fullPage = true, userAgent = null, eventCallback = () => true}) {
 
+    let client;
+
     try {
         eventCallback('Connecting');
 
-        const client = await ChromeRemoteInterface({
-            host: 'chrome'
-        });
+        client = await getClientConnection();
 
         client.on('event', function (message) {
             //if (message.method === 'Network.') {
@@ -28,7 +40,8 @@ export async function loadPage({url, width = 1440, height = 900, fullPage = true
                 //eventCallback('Event', message);
         });
 
-        const {Network, Page, DOM, Emulation} = client;
+        // I'm enabling so much stuff I think it will crash at some point :|
+        const { Network, Page, DOM, Emulation, Profiler, Runtime } = client;
 
         // Set up viewport resolution, etc.
         const deviceMetrics = {
@@ -50,8 +63,12 @@ export async function loadPage({url, width = 1440, height = 900, fullPage = true
             Network.enable(),
             Page.enable(),
             DOM.enable(),
+            Profiler.enable(),
             userAgent ? Network.setUserAgentOverride({ userAgent }) : null
         ]);
+
+        // Seems reasonable for now.
+        // await Profiler.setSamplingInterval({interval: 10});
 
         eventCallback('Connected');
 
@@ -59,7 +76,18 @@ export async function loadPage({url, width = 1440, height = 900, fullPage = true
         //Network.clearBrowserCookies();
         Network.setCacheDisabled(true);
 
-        await Page.navigate({url: url});
+        await Profiler.start();
+
+        await Page.navigate({ url });
+
+        await client.on('Page.loadEventFired', async _ => {
+            // on load we'll start profiling, kick off the test, and finish
+            await sleep(600);
+            const data = await Profiler.stop();
+            // saveProfile(data);
+        });
+
+        // Technically we could remove the event up there and move it down here..
         await Page.loadEventFired();
 
         console.log('Navigated! ... ');
@@ -104,8 +132,13 @@ export async function loadPage({url, width = 1440, height = 900, fullPage = true
             }))
             .catch(err => eventCallback('Screenshot', { success: false /*, message: err */ }));
 
-        // Should I even care about a return atm?
-        return 'NO_DATA';
+        // const res = await lighhouse('https://www.firebox.com', {
+        //     host: 'chrome',
+        // });
+
+        // console.log(res);
+
+        //doInNewContext(() => {});
     } catch (err) {
         console.error(err);
         //eventCallback('error');
@@ -113,13 +146,63 @@ export async function loadPage({url, width = 1440, height = 900, fullPage = true
         if (typeof client !== 'undefined' && typeof client.close === 'function') {
             await client.close();
         }
-
-        return null;
     }
-
-    return null;
 }
 
+
+// async function doInNewContext(action) {
+//     // connect to the DevTools special target
+//     const browser = await getClientConnection();
+//
+//     //const browser = await ChromeRemoteInterface({target: `ws://${HOSTNAME}:9222/devtools/browser`});
+//
+//     // create a new context
+//     const {Target} = browser;
+//     const {browserContextId} = await Target.createBrowserContext();
+//     const {targetId} = await Target.createTarget({
+//         url: 'about:blank',
+//         browserContextId
+//     });
+//
+//     console.log("Got target id", targetId);
+//     // Here I should really catch that promise reject...
+//     await browser.close();
+//
+//     // connect to the new context
+//     const client = await ChromeRemoteInterface({
+//         host: HOSTNAME,
+//         target: targetId
+//     });
+//
+//     // perform user actions on it
+//     try {
+//         await action(client);
+//     } finally {
+//         // cleanup
+//         await Target.closeTarget({targetId});
+//
+//     }
+// }
+
+// This is a lazy connection to the browser.
+// May be useful to give a few seconds extra to the
+// docker container to start/receive/listen to connections
+async function getClientConnection() {
+    if (globalClient === null) {
+        globalClient = await ChromeRemoteInterface({
+            host: 'chrome'
+        });
+    }
+
+    return globalClient;
+}
+
+// async function saveProfile(data) {
+//     const filename = `/tmp/profile-${Date.now()}.cpuprofile`;
+//     const string = JSON.stringify(data.profile, null, 2);
+//     fs.writeFileSync(filename, string);
+//     console.log('Done! Profile data saved to:', filename);
+// }
 
 export default {
 }

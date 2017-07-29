@@ -4,12 +4,13 @@ import { browserHistory } from 'react-router'
 import makeRootReducer from './reducers'
 import { updateLocation } from './location'
 import clientSocketMiddleware from './clientSocketMiddleware'
+import ApolloClient from '../ApolloClient'
 
 const createStore = (initialState = {}) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
-  const middleware = [thunk, clientSocketMiddleware]
+  const middleware = [thunk, clientSocketMiddleware, ApolloClient.middleware()]
 
   // ======================================================
   // Store Enhancers
@@ -18,9 +19,14 @@ const createStore = (initialState = {}) => {
   let composeEnhancers = compose
 
   if (__DEV__) {
+
     if (typeof window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ === 'function') {
-      composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+      //composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     }
+  }
+
+  if (window.devToolsExtension) {
+      enhancers.push(window.devToolsExtension());
   }
 
   // ======================================================

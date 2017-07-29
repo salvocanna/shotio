@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux'
 import locationReducer from './location'
-import mainReducer from './main'
 import { reducer as reduxFormReducer } from 'redux-form'
+import mainReducer from './main'
+import ApolloClient from '../ApolloClient'
 
 export const makeRootReducer = (asyncReducers) => {
 
@@ -10,6 +11,7 @@ export const makeRootReducer = (asyncReducers) => {
     location: locationReducer,
     main: mainReducer,
     form: reduxFormReducer,
+    apollo: ApolloClient.reducer(),
     ...asyncReducers
   })
 }
