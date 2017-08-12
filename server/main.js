@@ -8,10 +8,19 @@ import { createServer } from 'http'
 import logger from '../build/lib/logger'
 import webpackConfig from '../build/webpack.config'
 import project from '../project.config'
-import serverSocket from './serverSocket'
+// import serverSocket from './serverSocket'
 import graphqlHTTP from 'express-graphql'
 import { buildSchema } from 'graphql';
 
+import { PubSub } from 'graphql-subscriptions';
+// import { SubscriptionServerSubscriptionServer
+// } from 'subscriptions-transport-ws';
+import { execute, subscribe } from 'graphql';
+//import { schema } from './my-schema';
+
+
+
+const pubsub = new PubSub();
 // import { server, database } from './config';
 // import typeDefs from './typeDefs';
 // import resolvers from './resolvers';

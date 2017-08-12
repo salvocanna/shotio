@@ -10,7 +10,7 @@ const createStore = (initialState = {}) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
-  const middleware = [thunk, clientSocketMiddleware, ApolloClient.middleware()]
+  const middleware = [thunk, ApolloClient.middleware()]
 
   // ======================================================
   // Store Enhancers

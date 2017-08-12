@@ -35,6 +35,7 @@
     "express-graphql": "^0.6.7",
     "graphql": "^0.10.5",
     "graphql-server-express": "^1.0.4",
+    "graphql-subscriptions": "^0.4.4",
     "graphql-tools": "^1.1.0",
     "lighthouse": "^2.3.0",
     "mongoose": "^4.11.4",
